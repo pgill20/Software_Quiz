@@ -16,6 +16,11 @@ def root():
 
     return render_template('index.html', times=dummy_times)
 
+@app.route('/create_quiz')
+def create_quiz():
+    # This route will allow employers to create their quiz. 
+    return render_template('create_quiz.html')
+
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
