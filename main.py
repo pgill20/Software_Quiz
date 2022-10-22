@@ -1,9 +1,32 @@
 import datetime
+from urllib import request
+from google.cloud.sql.connector import Connector
+import sqlalchemy
+import pymysql
 
 from flask import Flask, render_template
 
 app = Flask(__name__)
 
+# initialize Connector object
+connector = Connector()
+
+# function to return the database connection
+def getconn() -> pymysql.connections.Connection:
+    conn: pymysql.connections.Connection = connector.connect(
+        "project:region:instance",
+        "pymysql",
+        user="dcglendon@gmail.com",
+        password="password",
+        db="quizstorage"
+    )
+    return conn
+
+# create connection pool
+pool = sqlalchemy.create_engine(
+    "mysql+pymysql://",
+    creator=getconn,
+)
 
 @app.route('/')
 def root():
@@ -20,6 +43,14 @@ def root():
 def create_quiz():
     # This route will allow employers to create their quiz. 
     return render_template('create_quiz.html')
+
+@app.route('/submit_quiz', methods=["POST"])
+def submit_quiz():
+    # This route is taken from create_quiz and allows created quizzes to be submitted to the database.
+    with pool.connect() as db_conn:
+        # insert into database
+        db_conn.execute("INSERT INTO quizstorage VALUES (:user, :questions)", user="Dan", questions=request.body)
+    return render_template('quiz_submitted.html', status = "Complete")
 
 
 if __name__ == '__main__':

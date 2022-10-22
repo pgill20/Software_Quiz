@@ -107,6 +107,7 @@ if (addButton) {
             addQuestion();
             hideMultipleChoiceOrCheckAll();
             unhideConfiguration();
+            clearQuiz();
         }
     })}
 
@@ -152,8 +153,13 @@ function addQuestion() {
 }
 
 function submitQuiz() {
-    // TODO: Add this quiz to the user's database, associated with their username.
-    console.log("WIP");
+    fetch("/submit_quiz", {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'}, 
+        body: JSON.stringify(questions)
+    }).then(res => {
+        console.log("Quiz Submitted! Response:", res);
+    });
 }
 
 var clearForm = () => { form.classList.add('hide'); }
