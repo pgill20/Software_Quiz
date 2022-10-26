@@ -63,7 +63,7 @@ def insertTestResults():
         insert_stmt = sqlalchemy.text(
         "INSERT INTO entries (guestName, content) values (:guestName, :content)",
         )
-        db_conn.execute(insert_stmt, guestName="First Insert", content="Success")
+        db_conn.execute(insert_stmt, guestName="Demo", content="Success")
     connector.close()
 
-getRankings()
+insertTestResults()
